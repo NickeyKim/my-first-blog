@@ -1,3 +1,4 @@
+ # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
@@ -5,7 +6,13 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
+from django.shortcuts import render_to_response
+from blog.models import DjangoBoard
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseRedirect
+from blog.pagingHelper import pagingHelper
 
+rowsPerPage = 2
 # Create your views here.
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
@@ -76,3 +83,20 @@ def comment_remove(request,pk):
     post.pk = comment.post.pk
     comment.delete()
     return redirect('blog.views.post_detail', pk=post.pk)
+def home(request):       # using model, extract two datas by id reversely without any additional SQL
+    boardList = DjangoBoard.objects.order_by('-id')[0:2]
+    current_page =1
+
+    # using model, extract the number of all datas.
+    totalCnt = DjangoBoard.objects.all().count()
+
+    # helper class to paging
+    pagingHelperIns = pagingHelper();
+    totalPageList = pagingHelperIns.getTotalPageList( totalCnt, rowsPerPage)
+    print ('totalPageList', totalPageList)
+
+    # return info to the template -> static template + dynamin data
+    # call listSpecificPage.html to see first view.
+    # send information to the dictionary
+    return render_to_response('blog/listSpecificPage.html', {'boardList': boardList, 'totalCnt': totalCnt,
+    'current_page':current_page ,'totalPageList':totalPageList} )
