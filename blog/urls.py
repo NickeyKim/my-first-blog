@@ -13,4 +13,9 @@ urlpatterns = [
     url(r'^comment/(?P<pk>\d+)/approve/$', views.comment_approve, name='comment_approve'),
     url(r'^comment/(?P<pk>\d+)/remove/$', views.comment_remove, name='comment_remove'),
     url(r'^home/$', views.home, name='home'),
+    url(r'^write_form/$', views.write_form, name='write_form'),
+    url(r'^DoWriteBoard/$', views.DoWriteBoard, name='DoWriteBoard'),
+    url(r'^listSpecificPageWork/$', views.listSpecificPageWork, name='listSpecificPageWork'),
+    url(r'^viewWork/$', views.viewWork, name='viewWork'),
+    url(r'^listSearchedSpecificPageWork/$', views.listSearchedSpecificPageWork, name='listSearchedSpecificPageWork'),
 ]
